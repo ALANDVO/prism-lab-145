@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "current_feature": "core-server-skeleton",
+  "features": [
+    {
+      "id": "core-server-skeleton",
+      "title": "Core Server Skeleton (FastAPI + React + WebSocket)",
+      "status": "done",
+      "acceptance": [
+        "FastAPI server starts and serves React frontend",
+        "WebSocket endpoint for real-time communication",
+        "Basic agent process management (spawn, read output, send input)",
+        "REST API for session management (create, list, delete sessions)",
+        "Frontend shows session list and terminal-like output"
+      ],
+      "implementation": [
+        "server/main.py",
+        "server/api/sessions.py",
+        "server/api/websocket.py",
+        "server/core/session_manager.py",
+        "server/core/providers.py",
+        "server/models/session.py",
+        "frontend/src/App.tsx",
+        "frontend/src/components/SessionList.tsx",
+        "frontend/src/components/Terminal.tsx",
+        "frontend/src/hooks/useWebSocket.ts",
+        "frontend/src/hooks/useSessions.ts",
+        "frontend/src/api/client.ts"
+      ],
+      "tests": [
+        "tests/test_sessions.py"
+      ]
+    },
+    {
+      "id": "provider-adapters",
+      "title": "Provider Adapters (Claude Code, Codex, etc.)",
+      "status": "planned",
+      "acceptance": [
+        "Abstract provider interface",
+        "Claude Code adapter implementation",
+        "Codex adapter implementation",
+        "Provider auto-detection"
+      ],
+      "implementation": [],
+      "tests": []
+    },
+    {
+      "id": "session-persistence",
+      "title": "Session Persistence (SQLite)",
+      "status": "planned",
+      "acceptance": [
+        "SQLite database for session storage",
+        "Persist session history and state",
+        "Restore sessions on server restart"
+      ],
+      "implementation": [],
+      "tests": []
+    },
+    {
+      "id": "auth-remote-access",
+      "title": "Authentication & Remote Access",
+      "status": "planned",
+      "acceptance": [
+        "Token-based authentication",
+        "Remote client connection support",
+        "HTTPS/TLS support for production"
+      ],
+      "implementation": [],
+      "tests": []
+    },
+    {
+      "id": "mobile-responsive-ui",
+      "title": "Mobile-Responsive Web UI",
+      "status": "planned",
+      "acceptance": [
+        "Responsive design for mobile browsers",
+        "Touch-friendly terminal interaction",
+        "Offline-capable service worker"
+      ],
+      "implementation": [],
+      "tests": []
+    }
+  ]
+}
