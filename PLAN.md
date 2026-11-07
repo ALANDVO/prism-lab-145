@@ -60,3 +60,6 @@ Acceptance:
 - Touch-friendly terminal interaction
 - Offline-capable service worker
 
+---
+
+Alan Vo · [alanvo.net](https://alanvo.net)

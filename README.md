@@ -162,3 +162,7 @@ Environment variables:
 MIT License - see LICENSE file for details.
 
 Maintainer: Alan Vo <alanvo@gmail.com>
+
+---
+
+Alan Vo · [alanvo.net](https://alanvo.net)

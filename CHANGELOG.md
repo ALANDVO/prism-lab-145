@@ -24,3 +24,6 @@ Partial code published for continued development. Known issues: STATUS.md.
 
 Partial code published for continued development. Known issues: STATUS.md.
 
+---
+
+Alan Vo · [alanvo.net](https://alanvo.net)
