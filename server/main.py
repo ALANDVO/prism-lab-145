@@ -1,13 +1,16 @@
 """Main FastAPI application entry point."""
 import logging
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
-from fastapi import FastAPI, Request
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, HTMLResponse
-from fastapi.middleware.cors import CORSMiddleware
 
-from server.api.sessions import router as sessions_router, set_session_manager
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
+
+from server.api.sessions import router as sessions_router
+from server.api.sessions import set_session_manager
 from server.api.websocket import router as websocket_router
 from server.core.session_manager import SessionManager
 
@@ -31,7 +34,7 @@ def get_session_manager() -> SessionManager:
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Application lifespan manager."""
     global _session_manager
     logger.info("Starting Prism Lab 145 server...")
@@ -76,8 +79,8 @@ FRONTEND_DIST = Path(__file__).parent.parent / "frontend" / "dist"
 if FRONTEND_DIST.exists():
     app.mount("/assets", StaticFiles(directory=FRONTEND_DIST / "assets"), name="assets")
 
-    @app.get("/{full_path:path}")
-    async def serve_frontend(full_path: str, request: Request) -> HTMLResponse:
+    @app.get("/{full_path:path}", response_model=None)
+    async def serve_frontend(full_path: str, request: Request) -> FileResponse | HTMLResponse:
         """Serve the React frontend for all non-API routes."""
         # Don't serve frontend for API routes
         if full_path.startswith("api/") or full_path.startswith("ws/"):

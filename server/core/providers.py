@@ -1,14 +1,11 @@
 """Provider abstraction for AI coding agents."""
-from abc import ABC, abstractmethod
-from typing import AsyncIterator, Optional, List
-from pathlib import Path
 import asyncio
-import shlex
 import os
-import signal
 import sys
+from abc import ABC, abstractmethod
+from pathlib import Path
 
-from server.models.session import Session, SessionStatus, MessageRole
+from server.models.session import Session
 
 
 class Provider(ABC):
@@ -22,13 +19,13 @@ class Provider(ABC):
         self,
         session: Session,
         working_dir: Path,
-        initial_prompt: Optional[str] = None,
+        initial_prompt: str | None = None,
     ) -> asyncio.subprocess.Process:
         """Spawn the agent process. Returns the process handle."""
         pass
 
     @abstractmethod
-    def get_command(self, working_dir: Path, initial_prompt: Optional[str] = None) -> List[str]:
+    def get_command(self, working_dir: Path, initial_prompt: str | None = None) -> list[str]:
         """Get the command to run the agent. Used for display/logging."""
         pass
 
@@ -49,7 +46,7 @@ class Provider(ABC):
             process.terminate()
             try:
                 await asyncio.wait_for(process.wait(), timeout=5.0)
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 process.kill()
                 await process.wait()
 
@@ -63,14 +60,14 @@ class MockProvider(Provider):
     def is_available(self) -> bool:
         return True
 
-    def get_command(self, working_dir: Path, initial_prompt: Optional[str] = None) -> List[str]:
+    def get_command(self, working_dir: Path, initial_prompt: str | None = None) -> list[str]:
         return [sys.executable, "-c", "import sys; [print(f'Echo: {line.strip()}') for line in sys.stdin]"]
 
     async def spawn(
         self,
         session: Session,
         working_dir: Path,
-        initial_prompt: Optional[str] = None,
+        initial_prompt: str | None = None,
     ) -> asyncio.subprocess.Process:
         # Simple echo process for testing
         script = (
@@ -118,7 +115,7 @@ class ClaudeCodeProvider(Provider):
             for p in os.environ.get("PATH", "").split(os.pathsep)
         )
 
-    def get_command(self, working_dir: Path, initial_prompt: Optional[str] = None) -> List[str]:
+    def get_command(self, working_dir: Path, initial_prompt: str | None = None) -> list[str]:
         cmd = ["claude", "--dangerously-skip-permissions"]
         if initial_prompt:
             cmd.extend(["-p", initial_prompt])
@@ -128,7 +125,7 @@ class ClaudeCodeProvider(Provider):
         self,
         session: Session,
         working_dir: Path,
-        initial_prompt: Optional[str] = None,
+        initial_prompt: str | None = None,
     ) -> asyncio.subprocess.Process:
         cmd = self.get_command(working_dir, initial_prompt)
         return await asyncio.create_subprocess_exec(
@@ -154,7 +151,7 @@ class CodexProvider(Provider):
             for p in os.environ.get("PATH", "").split(os.pathsep)
         )
 
-    def get_command(self, working_dir: Path, initial_prompt: Optional[str] = None) -> List[str]:
+    def get_command(self, working_dir: Path, initial_prompt: str | None = None) -> list[str]:
         cmd = ["codex", "exec"]
         if initial_prompt:
             cmd.extend(["-p", initial_prompt])
@@ -164,7 +161,7 @@ class CodexProvider(Provider):
         self,
         session: Session,
         working_dir: Path,
-        initial_prompt: Optional[str] = None,
+        initial_prompt: str | None = None,
     ) -> asyncio.subprocess.Process:
         cmd = self.get_command(working_dir, initial_prompt)
         return await asyncio.create_subprocess_exec(
@@ -186,12 +183,12 @@ _PROVIDERS: dict[str, Provider] = {
 }
 
 
-def get_provider(name: str) -> Optional[Provider]:
+def get_provider(name: str) -> Provider | None:
     """Get a provider by name."""
     return _PROVIDERS.get(name.lower())
 
 
-def list_providers() -> List[Provider]:
+def list_providers() -> list[Provider]:
     """List all registered providers."""
     return list(_PROVIDERS.values())
 

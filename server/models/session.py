@@ -1,8 +1,8 @@
-from enum import Enum
 from datetime import datetime
-from typing import Optional, List
-from pydantic import BaseModel, Field
+from enum import Enum
 from uuid import UUID, uuid4
+
+from pydantic import BaseModel, Field
 
 
 class SessionStatus(str, Enum):
@@ -35,8 +35,8 @@ class SessionMessage(BaseModel):
 class SessionCreate(BaseModel):
     """Request to create a new session."""
     provider: str = "mock"  # mock, claude, codex, cursor, etc.
-    working_directory: Optional[str] = None
-    initial_prompt: Optional[str] = None
+    working_directory: str | None = None
+    initial_prompt: str | None = None
 
 
 class Session(BaseModel):
@@ -47,9 +47,9 @@ class Session(BaseModel):
     status: SessionStatus = SessionStatus.CREATED
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
-    messages: List[SessionMessage] = Field(default_factory=list)
-    pid: Optional[int] = None
-    error: Optional[str] = None
+    messages: list[SessionMessage] = Field(default_factory=list)
+    pid: int | None = None
+    error: str | None = None
 
     model_config = {"use_enum_values": True}
 
@@ -60,7 +60,7 @@ class Session(BaseModel):
         self.updated_at = datetime.now()
         return msg
 
-    def set_status(self, status: SessionStatus, error: Optional[str] = None) -> None:
+    def set_status(self, status: SessionStatus, error: str | None = None) -> None:
         """Update session status."""
         self.status = status
         self.error = error
