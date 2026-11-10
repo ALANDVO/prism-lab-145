@@ -1,12 +1,12 @@
 """Session manager for handling agent sessions."""
 import asyncio
 import logging
+from collections.abc import Awaitable, Callable
 from pathlib import Path
-from typing import Dict, Optional, Set, Callable, Awaitable
 from uuid import UUID
 
-from server.models.session import Session, SessionCreate, SessionStatus, MessageRole
-from server.core.providers import Provider, get_provider, MockProvider
+from server.core.providers import MockProvider, get_provider
+from server.models.session import MessageRole, Session, SessionCreate, SessionStatus
 
 logger = logging.getLogger(__name__)
 
@@ -14,11 +14,11 @@ logger = logging.getLogger(__name__)
 class SessionManager:
     """Manages the lifecycle of agent sessions."""
 
-    def __init__(self, default_working_dir: Optional[Path] = None):
-        self._sessions: Dict[UUID, Session] = {}
-        self._processes: Dict[UUID, asyncio.subprocess.Process] = {}
-        self._read_tasks: Dict[UUID, asyncio.Task] = {}
-        self._output_callbacks: Dict[UUID, Set[Callable[[str], Awaitable[None]]]] = {}
+    def __init__(self, default_working_dir: Path | None = None):
+        self._sessions: dict[UUID, Session] = {}
+        self._processes: dict[UUID, asyncio.subprocess.Process] = {}
+        self._read_tasks: dict[UUID, asyncio.Task] = {}
+        self._output_callbacks: dict[UUID, set[Callable[[str], Awaitable[None]]]] = {}
         self._default_working_dir = default_working_dir or Path.cwd()
 
     async def create_session(self, session_create: SessionCreate) -> Session:
@@ -195,7 +195,7 @@ class SessionManager:
         if task and not task.done():
             task.cancel()
 
-    def get_session(self, session_id: UUID) -> Optional[Session]:
+    def get_session(self, session_id: UUID) -> Session | None:
         """Get a session by ID."""
         return self._sessions.get(session_id)
 

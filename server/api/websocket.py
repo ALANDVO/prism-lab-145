@@ -1,10 +1,11 @@
 """WebSocket endpoint for real-time session output."""
 from uuid import UUID
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends, Query
+
+from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect
 from fastapi.websockets import WebSocketState
 
-from server.core.session_manager import SessionManager
 from server.api.sessions import get_session_manager
+from server.core.session_manager import SessionManager
 
 router = APIRouter(prefix="/ws", tags=["websocket"])
 
@@ -38,7 +39,7 @@ async def session_websocket(
             "type": "message",
             "message": {
                 "id": str(msg.id),
-                "role": msg.role.value,
+                "role": msg.role,
                 "content": msg.content,
                 "timestamp": msg.timestamp.isoformat(),
             }

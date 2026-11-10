@@ -1,10 +1,11 @@
 """REST API endpoints for session management."""
 from uuid import UUID
-from fastapi import APIRouter, HTTPException, Depends, status
+
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 
-from server.models.session import Session, SessionCreate, SessionStatus, MessageRole
 from server.core.session_manager import SessionManager
+from server.models.session import Session, SessionCreate, SessionStatus
 
 router = APIRouter(prefix="/api/sessions", tags=["sessions"])
 
@@ -69,7 +70,7 @@ class SessionDetailResponse(SessionResponse):
             messages=[
                 {
                     "id": str(msg.id),
-                    "role": msg.role.value,
+                    "role": msg.role,
                     "content": msg.content,
                     "timestamp": msg.timestamp.isoformat(),
                 }
