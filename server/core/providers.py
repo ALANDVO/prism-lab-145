@@ -196,3 +196,18 @@ def list_providers() -> list[Provider]:
 def register_provider(provider: Provider) -> None:
     """Register a new provider."""
     _PROVIDERS[provider.name.lower()] = provider
+
+def get_available_providers() -> list[Provider]:
+    """Return providers that are available."""
+    return [p for p in _PROVIDERS.values() if p.is_available()]
+
+def auto_select_provider(preferred: str | None = None) -> Provider | None:
+    """Select a provider: prefer "preferred" if exists and available, else first available."""
+    if preferred:
+        provider = get_provider(preferred)
+        if provider and provider.is_available():
+            return provider
+    for provider in _PROVIDERS.values() values:
+        if provider.is_available():
+            return provider
+    return None
