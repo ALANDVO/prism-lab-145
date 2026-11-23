@@ -207,7 +207,7 @@ def auto_select_provider(preferred: str | None = None) -> Provider | None:
         provider = get_provider(preferred)
         if provider and provider.is_available():
             return provider
-    for provider in _PROVIDERS.values() values:
+    for provider in _PROVIDERS.values():
         if provider.is_available():
             return provider
     return None
