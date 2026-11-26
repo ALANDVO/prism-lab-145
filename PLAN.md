@@ -25,13 +25,17 @@ Tests: `tests/test_sessions.py`
 
 ### provider-adapters — Provider Adapters (Claude Code, Codex, etc.)
 
-Status: planned
+Status: in_progress
 
 Acceptance:
 - Abstract provider interface
 - Claude Code adapter implementation
 - Codex adapter implementation
 - Provider auto-detection
+
+Implementation: `server/core/providers.py - auto_detect_available() function`
+
+Tests: `tests/test_provider_auto_detect.py - test auto-detection`
 
 ### session-persistence — Session Persistence (SQLite)
 

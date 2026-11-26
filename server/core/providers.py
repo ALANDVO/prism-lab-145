@@ -193,6 +193,21 @@ def list_providers() -> list[Provider]:
     return list(_PROVIDERS.values())
 
 
+
+
+def auto_detect_available() -> list[Provider]:
+    """Auto-detect which providers are available on the system.
+
+    Returns a list of providers whose is_available() method returns True.
+    This is useful for dynamically discovering which AI coding agent
+    providers can be used without explicit configuration.
+    """
+    available: list[Provider] = []
+    for provider in _PROVIDERS.values():
+        if provider.is_available():
+            available.append(provider)
+    return available
+
 def register_provider(provider: Provider) -> None:
     """Register a new provider."""
     _PROVIDERS[provider.name.lower()] = provider

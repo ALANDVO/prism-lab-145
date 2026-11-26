@@ -34,15 +34,19 @@
     {
       "id": "provider-adapters",
       "title": "Provider Adapters (Claude Code, Codex, etc.)",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": [
         "Abstract provider interface",
         "Claude Code adapter implementation",
         "Codex adapter implementation",
         "Provider auto-detection"
       ],
-      "implementation": [],
-      "tests": []
+      "implementation": [
+        "server/core/providers.py - auto_detect_available() function"
+      ],
+      "tests": [
+        "tests/test_provider_auto_detect.py - test auto-detection"
+      ]
     },
     {
       "id": "session-persistence",
